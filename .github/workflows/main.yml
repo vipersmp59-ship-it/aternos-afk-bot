@@ -1,0 +1,21 @@
+name: Aternos 24/7 Bot
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '*/20 * * * *' # Будет проверять работу каждые 20 минут
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+      - name: Run Bot
+        run: node index.js
