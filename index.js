@@ -3,9 +3,9 @@ const mineflayer = require('mineflayer');
 function createBot() {
     const bot = mineflayer.createBot({
         host: 'Viper-SMP.aternos.me', // <-- ТВОЙ АДРЕС ТУТ
-        port: 25565,
+        port: 62227,
         username: 'AFK_Bot_Pro', // Ник бота
-        version: false // Авто-определение версии
+        version: 1.21.11 // Авто-определение версии
     });
 
     bot.on('spawn', () => {
