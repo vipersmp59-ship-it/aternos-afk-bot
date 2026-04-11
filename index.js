@@ -9,7 +9,7 @@ function createBot() {
     });
 
     setTimeout(() => {
-    bot.chat('/login пароль123')
+    bot.chat('/login 224466')
   }, 2000) // Задержка в 2 секунды, чтобы сервер успел прогрузить бота
 })
 
