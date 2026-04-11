@@ -1,48 +1,62 @@
 const mineflayer = require('mineflayer')
 
-// Настройки подключения
-const botArgs = {
-    host: 'Viper-SMP.aternos.me', // Замени на свой айпи
-    port: 62227,
-    username: 'AternosBot3000',   // Имя бота
-    version: '1.21.4'               // Укажи версию своего сервера
+// Настройки
+const config = {
+    host: 'ТВОЙ_АЙПИ.aternos.me', 
+    username: 'Bot_Danya_Super',
+    version: '1.21.4',
+    password: 'SuperPassword123' // Пароль для регистрации/логина
 }
-
-const password = 'YourPassword123' // Придумай пароль для регистрации
 
 function createBot() {
-    const bot = mineflayer.createBot(botArgs)
+    const bot = mineflayer.createBot({
+        host: config.host,
+        username: config.username,
+        version: config.version
+    })
 
-    // Когда бот заспавнился
-    bot.on('spawn', () => {
-        console.log('Бот зашел на сервер!')
+    // 1. Прохождение регистрации и логина через чат
+    bot.on('messagestr', (message) => {
+        const msg = message.toLowerCase()
         
-        // Ждем 3 секунды перед вводом команд (чтобы прогрузился мир)
-        setTimeout(() => {
-            // Пытаемся и зарегистрироваться, и залогиниться на всякий случай
-            bot.chat(`/register ${2244667} ${2244667}`)
-            bot.chat(`/login ${2244667}`)
-            console.log('Команды авторизации отправлены')
-        }, 3000)
-
-        // Цикл ударов рукой (чтобы не кикнуло за АФК)
-        setInterval(() => {
-            // Машем рукой (бьем воздух)
-            bot.swingArm('right')
-            
-            // Можно еще заставить его слегка поворачиваться, чтобы выглядел живым
-            bot.look(bot.entity.yaw + 0.1, bot.entity.pitch)
-        }, 1500) // Машет каждые 1.5 секунды
+        if (msg.includes('/register')) {
+            console.log('Вижу запрос регистрации...')
+            bot.chat(`/register ${config.password} ${config.password}`)
+        } 
+        else if (msg.includes('/login')) {
+            console.log('Вижу запрос логина...')
+            bot.chat(`/login ${config.password}`)
+        }
     })
 
-    // Авто-реконнект, если выкинуло
+    // 2. Действия после спавна
+    bot.on('spawn', () => {
+        console.log('Бот успешно заспавнился на сервере!')
+        
+        // Машем рукой каждые 2 секунды (Anti-AFK)
+        if (!bot.antifitInterval) {
+            bot.antifitInterval = setInterval(() => {
+                bot.swingArm('right')
+            }, 2000)
+        }
+    })
+
+    // 3. Обработка ошибок (чтобы не было Exit Code 1)
+    bot.on('error', (err) => {
+        console.error('Критическая ошибка:', err.message)
+        if (err.code === 'ECONNREFUSED') {
+            console.log('Ошибка подключения: Проверь, включен ли сервер или не забанен ли IP GitHub.')
+        }
+    })
+
+    // 4. Авто-реконнект при кике
     bot.on('end', () => {
-        console.log('Бот отключен. Переподключение через 10 секунд...')
-        setTimeout(createBot, 10000)
+        console.log('Бот отключен. Пробую зайти снова через 20 секунд...')
+        clearInterval(bot.antifitInterval)
+        bot.antifitInterval = null
+        setTimeout(createBot, 20000)
     })
-
-    // Лог ошибок в консоль Гитхаба
-    bot.on('error', (err) => console.log('Ошибка:', err))
 }
 
+// Запуск
 createBot()
