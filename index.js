@@ -2,7 +2,7 @@ const mineflayer = require('mineflayer')
 
 // Настройки
 const config = {
-    host: 'ТВОЙ_АЙПИ.aternos.me', 
+    host: 'Viper-SMP.aternos.me', 
     username: 'Bot_Danya_Super',
     version: '1.21.4',
     password: 'SuperPassword123' // Пароль для регистрации/логина
