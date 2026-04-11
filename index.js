@@ -4,9 +4,14 @@ function createBot() {
     const bot = mineflayer.createBot({
         host: 'Viper-SMP.aternos.me', // <-- ТВОЙ АДРЕС ТУТ
         port: 62227,
-        username: 'AFK_Bot_Pro', // Ник бота
+        username: 'AFK_Bot3000', // Ник бота
         version: false // Авто-определение версии
     });
+
+    setTimeout(() => {
+    bot.chat('/login пароль123')
+  }, 2000) // Задержка в 2 секунды, чтобы сервер успел прогрузить бота
+})
 
     bot.on('spawn', () => {
         console.log('Бот в игре!');
